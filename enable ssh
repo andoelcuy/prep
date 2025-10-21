@@ -1,0 +1,12 @@
+# Update & upgrade
+sudo apt update && sudo apt upgrade -y
+
+# Install paket yang dibutuhkan
+sudo apt install git curl bash -y
+
+# Ubah konfigurasi SSH agar root login diizinkan
+sudo sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Restart SSH biar perubahan langsung aktif
+sudo systemctl restart ssh
+
