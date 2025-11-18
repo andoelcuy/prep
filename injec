@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo "==== Inject DB GenieACS ===="
+
+# Langsung eksekusi mongosh dengan perintah sekaligus
+mongosh <<EOF
+use genieacs
+db.users.insertOne({
+    _id: "alprut",
+    roles: "admin",
+    password: "2e23a1d0a9bcb20e254c18e78908dc196f6170104c8e3ac8aa7e684891e04fcd8b014fb6d76daa48c87203cfd3fa7d6d728218387d7ca4637f4ea645fce9b88de2523c6b66189b2fb8fb4f628315d64f1deefe05c2e618dc416e4164fff54d1271f46bbf1a76505af15154d1eaeb7d67d554881285a16a8726e7c9ad2c5d99cd",
+    salt: "86e1a64369bca5a7c110ac92cc444af916fedbe4ff0b99cb960d89e2d45ca649c9f300868b97607ec1f94d7b296afc8f68ffc561da84618ea26b73fd2584b5cb"
+})
+EOF
+
+
+echo "==== Inject Sukses By ALPRUT ===="
+
+# Tanya sebelum restart service
+read -p "Restart service GenieACS untuk menerapkan injek? (y/n): " jawab
+
+if [[ "$jawab" == "y" || "$jawab" == "Y" ]]; then
+    echo "Restarting GenieACS services..."
+    systemctl restart genieacs-cwmp
+    systemctl restart genieacs-nbi
+    systemctl restart genieacs-fs
+    systemctl restart genieacs-ui
+    echo "==== Restart Service Sukses ===="
+else
+    echo "==== Skip restart service ===="
+fi
+
+# Langsung hapus folder setelah restart (tanpa konfirmasi)
+rm -rf ../genie
+rm -rf ../tools
